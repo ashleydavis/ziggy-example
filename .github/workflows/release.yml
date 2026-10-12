@@ -22,14 +22,10 @@ on:
 
 jobs:
   zig-build:
-    # Builds the app's core and cross-builds it for every other platform, with and without the test hooks, and compiles the
-    # Windows shell, on each desktop platform.
+    # Cross-builds the app's core for every platform, with and without the test hooks, and compiles the Windows shell. Zig
+    # cross-builds from any machine, so this runs once, on Linux.
     timeout-minutes: 40
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -388,9 +384,21 @@ jobs:
         timeout-minutes: 60
         run: bun run test:smoke:ios
 
+      # Saved under this platform's own key so the package job, which builds the same release app, finds the Zig part already
+      # built. Always, so a job that fails part way still leaves what it compiled.
+      - name: Save the Zig build caches
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .zig-cache
+          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}-smoke-${{ matrix.platform }}
+
   package:
     # Packages the app for every platform with its own package scripts, and uploads the packages as artifacts of the run. The
-    # iOS archive is built without signing, and the Android APKs with the SDK and NDK.
+    # iOS archive is built without signing, and the Android APKs with the SDK and NDK. It runs after the smoke tests and starts
+    # from the Zig build cache they saved, so the Zig part of the release build is not compiled a second time.
+    needs: smoke-tests
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -475,7 +483,7 @@ jobs:
         with:
           path: |
             .zig-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}
+          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}-smoke-${{ matrix.platform }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-
 
