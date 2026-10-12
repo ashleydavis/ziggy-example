@@ -1,5 +1,5 @@
 const std = @import("std");
-const ziggy = @import("ziggy");
+const ziggy = @import("ziggy-core");
 const example = @import("ziggy-test-app-core");
 
 const FakeShell = ziggy.fake_shell.FakeShell;

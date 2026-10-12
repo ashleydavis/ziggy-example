@@ -20,7 +20,7 @@ The app is developed on Linux and delivered and tested on Linux, Windows, macOS,
 
 ## Ziggy
 
-- Ziggy's code lives in `../ziggy`. This repository takes it by path in `build.zig.zon` (the `ziggy` dependency), `package.json` (`ziggy-bridge`), the Xcode projects in `shells/macos` and `shells/ios` and `shells/android/settings.gradle`.
+- Ziggy's code lives in `../ziggy`. This repository takes it by path in `build.zig.zon` (the `ziggy` dependency), `package.json` (`ziggy-ui`), the Xcode projects in `shells/macos` and `shells/ios` and `shells/android/settings.gradle`.
 - Never edit Ziggy's code from this repository. If a change needs one in Ziggy, stop and say what and why.
 
 ## Rules

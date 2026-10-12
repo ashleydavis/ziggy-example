@@ -1,6 +1,6 @@
 # Ziggy test app, Windows native app
 
-The Windows executable of the Ziggy test app. `src/main.zig` names the app and hands it to `ziggy-shell-windows` (`packages/ziggy/native/windows`), which does everything else.
+The Windows executable of the Ziggy test app. `src/main.zig` names the app and hands it to `ziggy-native-windows` (`packages/ziggy/native/windows`), which does everything else.
 
 ## What the native app does
 
