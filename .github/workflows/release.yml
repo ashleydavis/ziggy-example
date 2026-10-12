@@ -101,7 +101,7 @@ jobs:
           key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}
 
   unit-tests:
-    # The unit tests on each platform. The desktop platforms run the TypeScript tests (the app's page) and every
+    # The unit tests on each platform. The desktop platforms run the TypeScript tests (the app's UI) and every
     # Zig test (`zig build test`: the app's core) on the runner. Android runs the
     # Zig test programs on an emulator and the Android shell's JUnit tests on the runner's JVM. iOS runs the Zig test programs on a
     # simulator, because a program built for a phone cannot run on the runner.
@@ -180,7 +180,7 @@ jobs:
         shell: bash
         run: bun run test
 
-      # `test:zig` builds the app's page before it runs the core's tests, which embed it.
+      # `test:zig` builds the app's UI before it runs the core's tests, which embed it.
       - name: Run the Zig unit tests
         if: matrix.platform == 'linux' || matrix.platform == 'macos' || matrix.platform == 'windows'
         shell: bash

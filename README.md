@@ -2,16 +2,18 @@
 
 An app made from the Ziggy example, in a folder of its own, to prove that an app outside Ziggy's repository can be built on Ziggy as a package. It was copied from `apps/ziggy-example`, renamed, and pointed at the Ziggy checkout beside it by local path, as [Building your app](../ziggy/docs/building-your-app.md) describes, and holds no Ziggy source. Everything below is the example's description, which holds for it too. See [Ziggy architecture](../ziggy/docs/architecture.md) for how the parts fit.
 
+"The UI" in this repository means the app's HTML, CSS and TypeScript, which runs in each platform's system web view. The native menus and file dialogs the shells draw are not part of it.
+
 ## What it shows
 
-- The page asks the Zig core a question (`ping`) and shows the answer.
-- Tasks: a short task, a long task that queues child tasks and waits for them, several long tasks at once, cancelling by source, and a task that fails. Output text, `job-progress` messages and every `task-message` and `task-completed` event appear in the page.
+- The UI asks the Zig core a question (`ping`) and shows the answer.
+- Tasks: a short task, a long task that queues child tasks and waits for them, several long tasks at once, cancelling by source, and a task that fails. Output text, `job-progress` messages and every `task-message` and `task-completed` event appear in the UI.
 - The edges of the bridge: a multi-megabyte payload, text with quotes, newlines and non-ASCII characters, an error reply, and a file written and read in the app's private data directory.
-- A native host callback: the page asks for the operating system's version, a task calls the shell's callback and the answer comes back to the page.
-- File and folder pickers: three buttons ask the core for the native dialogs (`pick-files`, `pick-folder`, `pick-file`), and the page shows the paths chosen. A phone has no save dialog, so that button gives an error on iOS.
-- A loopback HTTP server in the core (the example's own code, not Ziggy's) that serves an example image and video to the page, which loads them and asks for a range of bytes.
+- A native host callback: the UI asks for the operating system's version, a task calls the shell's callback and the answer comes back to the UI.
+- File and folder pickers: three buttons ask the core for the native dialogs (`pick-files`, `pick-folder`, `pick-file`), and the UI shows the paths chosen. A phone has no save dialog, so that button gives an error on iOS.
+- A loopback HTTP server in the core (the example's own code, not Ziggy's) that serves an example image and video to the UI, which loads them and asks for a range of bytes.
 - Keep-alive tasks: a background task type registered as keep-alive that goes on running when the app is sent to the background (a phone), and a normal one that does not.
-- Page storage: `localStorage` and IndexedDB values the page writes and reads back after the app is started again.
+- UI storage: `localStorage` and IndexedDB values the UI writes and reads back after the app is started again.
 - Dropped files: a drop zone that shows the real path of a dropped file, from `window.ziggy.getPathForFile`.
 - A desktop menu defined once in Zig and drawn natively, with keyboard shortcuts that work anywhere in the window, and developer tools (Ctrl+Shift+I, or Cmd+Shift+I on a Mac) that open from it. A phone shows no menu.
 
@@ -20,9 +22,9 @@ An app made from the Ziggy example, in a folder of its own, to prove that an app
 Everything here is the example's own. Ziggy, the package it is built on, is in `packages/ziggy` at the root of this repository.
 
 - `build.zig` and `build.zig.zon`: the example's Zig build. It takes Ziggy as the dependency `ziggy` by the path `../..`, and builds the core (`ziggy-test-app-core`), the Linux and Windows shells (`ziggy-test-app-linux`, `ziggy-test-app-windows`) and the core's unit tests (`test`) with Ziggy's build functions.
-- `page/`: the page. `page/index.html` is the page and `page/src/lib` holds the plain functions that have unit tests. `vite.config.ts` is its build, which writes `dist` with relative paths and a classic script so it loads from an address of the app's own in every web view. `dist` is embedded in the app's own code on every platform (the Linux and Windows executables, and the core library that the MacOS, iOS and Android apps contain), so no platform has a folder of page files (see the [architecture guide](../ziggy/docs/architecture.md#the-bundled-page)).
+- `ui/`: the UI. `ui/index.html` is the UI and `ui/src/lib` holds the plain functions that have unit tests. `vite.config.ts` is its build, which writes `dist` with relative paths and a classic script so it loads from an address of the app's own in every web view. `dist` is embedded in the app's own code on every platform (the Linux and Windows executables, and the core library that the MacOS, iOS and Android apps contain), so no platform has a folder of UI files (see the [architecture guide](../ziggy/docs/architecture.md#the-bundled-ui)).
 - `core/`: the example's Zig library, which adds its channel handlers and task handlers to Ziggy's core.
-- `shells/<platform>/`: the example's native project for each platform: its name, window, icon and the app's core and page packaged together. Each one builds on Ziggy's framework half for that platform in `packages/ziggy/native/<platform>`: the Linux and Windows shells through the Zig build, the Xcode projects through a local Swift package, and the Android project through an included Gradle build.
+- `shells/<platform>/`: the example's native project for each platform: its name, window, icon and the app's core and UI packaged together. Each one builds on Ziggy's framework half for that platform in `packages/ziggy/native/<platform>`: the Linux and Windows shells through the Zig build, the Xcode projects through a local Swift package, and the Android project through an included Gradle build.
 - `scripts`: the build, run, packaging and setup scripts, and the shell libraries the scripts and smoke tests share (`scripts/lib`), each with a markdown file beside it.
 - `smoke-tests`: the smoke test scenarios and a library for each platform. See `smoke-tests/run.md`.
 
@@ -32,7 +34,7 @@ From the root of this repository, `<platform>` being `linux`, `windows`, `macos`
 
 | Command | What it does |
 |---|---|
-| `bun run build:ziggy-test-app:<platform>` | Builds the page and the app. |
+| `bun run build:ziggy-test-app:<platform>` | Builds the UI and the app. |
 | `bun run run:ziggy-test-app:<platform>` | Builds the app and launches it (an emulator, simulator or device for a phone). |
 | `bun run open:ziggy-test-app:<platform>` | Syncs, then opens the native project in its editor. |
 | `bun run package:ziggy-test-app:<platform>` | Packages the app for distribution, without the test hooks, into `out/<platform>`. |
@@ -42,7 +44,7 @@ From the root of this repository, `<platform>` being `linux`, `windows`, `macos`
 | `bun run test:ziggy-test-app:and` | The smoke tests on an attached Android emulator or device. |
 | `bun run test:ziggy-test-app:ios` | The smoke tests on the iOS simulator. |
 
-`bun run --filter=ziggy-test-app test` runs the page's unit tests, `bun run --filter=ziggy-test-app test:zig` the core's, and `bun run --filter=ziggy-test-app test:zig:android` (or `:ios`) the core's on an emulator or simulator.
+`bun run --filter=ziggy-test-app test` runs the UI's unit tests, `bun run --filter=ziggy-test-app test:zig` the core's, and `bun run --filter=ziggy-test-app test:zig:android` (or `:ios`) the core's on an emulator or simulator.
 
 `bun run package:ziggy-test-app:<platform>` builds the release app, without the test hooks, and writes unsigned packages. Each platform's script doc says where they go and what they need:
 

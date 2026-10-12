@@ -1,6 +1,6 @@
 # sync-ios
 
-Builds the example's page (`bun run bundle:ui`) and puts what the iOS Xcode project needs into a native directory: `lib/libziggy_test_app.a` and `include/ziggy.h` (built with Zig for iOS 14.0, the simulator or the device). The page is embedded in the library, so the app has no page files of its own.
+Builds the example's UI (`bun run bundle:ui`) and puts what the iOS Xcode project needs into a native directory: `lib/libziggy_test_app.a` and `include/ziggy.h` (built with Zig for iOS 14.0, the simulator or the device). The UI is embedded in the library, so the app has no UI files of its own.
 
 Run it on a Mac: `bash scripts/sync-ios.sh`.
 
