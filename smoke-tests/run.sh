@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Runs the Ziggy test app's smoke test scenarios for one platform. Invoked by the root package.json scripts, never directly.
+# Runs the Ziggy test app's smoke test scenarios for one platform. Invoked by the package.json scripts, never directly.
 # See run.md.
 
 set -u

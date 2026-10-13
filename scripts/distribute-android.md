@@ -1,12 +1,12 @@
 # distribute-android.sh
 
-Builds the example's Android app and uploads it to Firebase App Distribution, which notifies the tester group and gives them a link to install it. The [guide to distributing your app](../../../docs/distributing-your-app.md) covers the one-time Firebase setup, what testers do on their phones and what goes wrong.
+Builds the example's Android app and uploads it to Firebase App Distribution, which notifies the tester group and gives them a link to install it. The [guide to distributing your app](../../ziggy/docs/distributing-your-app.md) covers the one-time Firebase setup, what testers do on their phones and what goes wrong.
 
 Run it from the repository root:
 
 ```
-bun run distribute:ziggy-test-app:android
-bun run distribute:ziggy-test-app:android -- --groups testers,family
+bun run distribute:android
+bun run distribute:android -- --groups testers,family
 ```
 
 It needs the Firebase CLI on your PATH and signed in (`curl -sL https://firebase.tools | bash`, then `firebase login`), and the Android SDK and NDK that `bun run --filter=ziggy-test-app setup` sets up.

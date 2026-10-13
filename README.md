@@ -1,6 +1,6 @@
 # Ziggy test app
 
-An app made from the Ziggy example, in a folder of its own, to prove that an app outside Ziggy's repository can be built on Ziggy as a package. It was copied from `apps/ziggy-example`, renamed and pointed at the Ziggy checkout beside it by local path, as [Building your app](../ziggy/docs/building-your-app.md) describes, and holds no Ziggy source. Everything below is the example's description, which holds for it too. See [Ziggy architecture](../ziggy/docs/architecture.md) for how the parts fit.
+An app made from the Ziggy template, in a folder of its own, to prove that an app outside Ziggy's repository can be built on Ziggy as a package. It was copied from `apps/ziggy-template`, renamed and pointed at the Ziggy checkout beside it by local path, as [Building your app](../ziggy/docs/building-your-app.md) describes, and holds no Ziggy source. Everything below is the example's description, which holds for it too. See [Ziggy architecture](../ziggy/docs/architecture.md) for how the parts fit.
 
 ## What it shows
 
@@ -17,34 +17,38 @@ An app made from the Ziggy example, in a folder of its own, to prove that an app
 
 ## Where things are
 
-Everything here is the example's own. Ziggy, the package it is built on, is in `packages/ziggy` at the root of this repository.
+Everything here is the app's own. Ziggy, the package it is built on, is the checkout in `../ziggy`, beside this repository.
 
-- `build.zig` and `build.zig.zon`: the example's Zig build. It takes Ziggy as the dependency `ziggy` by the path `../..`, and builds the core (`ziggy-test-app-core`), the Linux and Windows native apps (`ziggy-test-app-linux`, `ziggy-test-app-windows`) and the core's unit tests (`test`) with Ziggy's build functions.
+- `build.zig` and `build.zig.zon`: the app's Zig build. It takes Ziggy as the dependency `ziggy` by the path `../ziggy`, and builds the core (`ziggy-test-app-core`), the Linux and Windows native apps (`ziggy-test-app-linux`, `ziggy-test-app-windows`), dev mode (`ziggy-test-app-dev`) and the core's unit tests (`test`) with Ziggy's build functions.
+- `package.json`: takes the UI's types from Ziggy as `ziggy-ui`, by the path `../ziggy/packages/ziggy/ui`.
 - `ui/`: the UI. `ui/index.html` is the UI and `ui/src/lib` holds the plain functions that have unit tests. `vite.config.ts` is its build, which writes `dist` with relative paths and a classic script so it loads from an address of the app's own in every web view. `dist` is embedded in the app's own code on every platform (the Linux and Windows executables, and the core library that the MacOS, iOS and Android apps contain), so no platform has a folder of UI files (see the [architecture guide](../ziggy/docs/architecture.md#the-bundled-ui)).
-- `core/`: the example's Zig library, which adds its channel handlers and task handlers to Ziggy's core.
-- `shells/<platform>/`: the example's native project for each platform: its name, window, icon and the app's core and UI packaged together. Each one builds on Ziggy's framework half for that platform in `packages/ziggy/native/<platform>`: the Linux and Windows native apps through the Zig build, the Xcode projects through a local Swift package and the Android project through an included Gradle build.
+- `core/`: the app's Zig library, which adds its channel handlers and task handlers to Ziggy's core.
+- `shells/<platform>/`: the app's native project for each platform: its name, window, icon and the app's core and UI packaged together. Each one builds on Ziggy's part for that platform in `../ziggy/packages/ziggy/native/<platform>`: the Linux and Windows native apps through the Zig build, the Xcode projects through a local Swift package and the Android project through an included Gradle build.
 - `scripts`: the build, run, packaging and setup scripts, and the shell libraries the scripts and smoke tests share (`scripts/lib`), each with a markdown file beside it.
 - `smoke-tests`: the smoke test scenarios and a library for each platform. See `smoke-tests/run.md`.
 
 ## Commands
 
-From the root of this repository, `<platform>` being `linux`, `windows`, `macos`, `android` or `ios`. Each platform's commands run on that platform (MacOS and iOS need a Mac with Xcode 14.2, and Windows runs them under Git Bash). The same commands without the `ziggy-test-app` part (`bun run build:<platform>`, `bun run test:smoke`) run from this folder.
+From the root of this repository, `<platform>` being `linux`, `windows`, `macos`, `android` or `ios`. Each platform's commands run on that platform (MacOS and iOS need a Mac with Xcode 14.2, and Windows runs them under Git Bash).
 
 | Command | What it does |
 |---|---|
-| `bun run build:ziggy-test-app:<platform>` | Builds the UI and the app. |
-| `bun run run:ziggy-test-app:<platform>` | Builds the app and launches it (an emulator, simulator or device for a phone). |
-| `bun run open:ziggy-test-app:<platform>` | Syncs, then opens the native project in its editor. |
-| `bun run package:ziggy-test-app:<platform>` | Packages the app for distribution, without the test hooks, into `out/<platform>`. |
-| `bun run distribute:ziggy-test-app:android` | Builds the Android app and uploads it to Firebase App Distribution for the tester group. See `scripts/distribute-android.md`. |
-| `bun run clean:ziggy-test-app:<platform>` | Removes the platform's build output. |
-| `bun run test:ziggy-test-app` | The smoke tests on the host operating system. |
-| `bun run test:ziggy-test-app:and` | The smoke tests on an attached Android emulator or device. |
-| `bun run test:ziggy-test-app:ios` | The smoke tests on the iOS simulator. |
+| `bun run setup` | One time per machine: the platform toolchains. |
+| `bun run dev` | Runs the app in dev mode: Vite (the `dev:ui` script) serves the UI, the dev host runs the core in front of it, rebuilt as its Zig files change, and the default browser opens the dev host, with live reload. See the [dev host's README](../ziggy/packages/ziggy/dev/README.md). |
+| `bun run build:<platform>` | Builds the UI and the app. |
+| `bun run run:<platform>` | Builds the app and launches it (an emulator, simulator or device for a phone). |
+| `bun run open:<platform>` | Syncs, then opens the native project in its editor. |
+| `bun run package:<platform>` | Packages the app for distribution, without the test hooks, into `out/<platform>`. |
+| `bun run distribute:android` | Builds the Android app and uploads it to Firebase App Distribution for the tester group. See `scripts/distribute-android.md`. |
+| `bun run clean:<platform>` | Removes the platform's build output. |
+| `bun run test` | The UI's unit tests. |
+| `bun run test:zig` | The core's unit tests. |
+| `bun run test:zig:android` | The core's unit tests on an attached Android emulator or device (`:ios` for a booted iOS simulator). |
+| `bun run test:smoke` | The smoke tests on the host operating system. |
+| `bun run test:smoke:and` | The smoke tests on an attached Android emulator or device. |
+| `bun run test:smoke:ios` | The smoke tests on the iOS simulator. |
 
-`bun run --filter=ziggy-test-app test` runs the UI's unit tests, `bun run --filter=ziggy-test-app test:zig` the core's and `bun run --filter=ziggy-test-app test:zig:android` (or `:ios`) the core's on an emulator or simulator.
-
-`bun run package:ziggy-test-app:<platform>` builds the release app, without the test hooks, and writes unsigned packages. Each platform's script doc says where they go and what they need:
+`bun run package:<platform>` builds the release app, without the test hooks, and writes unsigned packages. Each platform's script doc says where they go and what they need:
 
 | Platform | Packages | Script doc |
 |---|---|---|
@@ -53,13 +57,6 @@ From the root of this repository, `<platform>` being `linux`, `windows`, `macos`
 | `macos` | `.dmg`, zip | `scripts/package-macos.md` |
 | `ios` | `.xcarchive`, `.ipa` | `scripts/package-ios.md` |
 | `android` | `.apk` per architecture | `scripts/package-android.md` |
-
-## What each platform needs
-
-- **Linux:** the GTK 3 and WebKitGTK 4.1 runtime libraries (`libgtk-3-0`, `libwebkit2gtk-4.1-0`) and the GStreamer plugins WebKitGTK plays video with (`gstreamer1.0-plugins-good`, `gstreamer1.0-libav`) to build and run, with no development packages. The smoke tests also need `xvfb`, `xwininfo` and `jq`, and packaging needs `zip` and `dpkg-deb`. If the web view's sandbox cannot start on your system the app says so and runs without it. See `scripts/run-linux.md`.
-- **Windows:** the scripts are bash scripts and run under Git Bash. The tools `mise install` puts in place (`bun`, `zig`, `jq`) must be on PATH: add `%LOCALAPPDATA%\mise\shims` to PATH, or activate mise in your shell. Then run `bun run --filter=ziggy-test-app setup` once. Building needs Microsoft's C++ toolchain and the Windows SDK (Visual Studio or its Build Tools, the "Desktop development with C++" workload), because the WebView2 loader is linked into the exe from the SDK's static library and that library is built with it, and packaging needs the WiX Toolset. Setup downloads the pinned WebView2 SDK and a pinned WiX Toolset, which need no administrator approval, and installs the C++ toolchain and the Windows SDK through `winget` when they are missing, which does. See `scripts/setup-windows.md`.
-- **MacOS and iOS:** a Mac with macOS 12.7.6 or newer and Xcode 14.2 or newer.
-- **Android:** `bun run --filter=ziggy-test-app setup`, which installs the Android SDK, the NDK `shells/android/variables.gradle` pins and a JDK 17 where they are missing (`scripts/install-android-sdk.md`). The smoke tests use any attached emulator or device.
 
 ## Test hooks
 
@@ -74,4 +71,4 @@ The smoke tests drive the real app through the test hooks listed in "Test hooks"
 
 ## CI
 
-This app has no workflow of its own yet. Its tests run with the commands above.
+`.github/workflows/release.yml` runs on every push. It clones Ziggy beside the app, as `../ziggy`, then builds and cross-builds the Zig code, runs the unit tests and the smoke tests on every platform, packages the app for every platform and publishes the packages.

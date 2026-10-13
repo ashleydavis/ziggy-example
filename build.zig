@@ -5,7 +5,8 @@ const ziggy_build = @import("ziggy");
 // Builds the Ziggy test app, an app built on Ziggy the way every app is: it takes Ziggy as the dependency named "ziggy" in
 // build.zig.zon, builds its core as a library with the `ziggy-test-app-core` step, and its Linux and Windows shells with the
 // `ziggy-test-app-linux` and `ziggy-test-app-windows` steps. The Xcode projects and the Android project are built by the app's scripts,
-// which ask the `ziggy-test-app-core` step for the core's library. `test` runs the unit tests of the example's core.
+// which ask the `ziggy-test-app-core` step for the core's library. `ziggy-test-app-dev` runs it in dev mode, with the UI in a browser, which comes
+// with the core. `test` runs the unit tests of the example's core.
 //
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});

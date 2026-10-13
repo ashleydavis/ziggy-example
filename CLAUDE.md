@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-The Ziggy test app is an app made from the Ziggy example and built on Ziggy, to prove that an app outside Ziggy's repository can be built on Ziggy as a package. It takes Ziggy by local path from a checkout of it beside this repository (`../ziggy`) and holds no Ziggy source.
+The Ziggy test app is an app made from the Ziggy template and built on Ziggy, to prove that an app outside Ziggy's repository can be built on Ziggy as a package. It takes Ziggy by local path from a checkout of it beside this repository (`../ziggy`) and holds no Ziggy source.
 
 "The UI", "the core" and "the native app" mean what the [Glossary](README.md#glossary) says. [Ziggy's glossary](../ziggy/README.md#glossary) has the full list. Use those terms.
 
@@ -123,6 +123,7 @@ Run from the root of this repository. Each platform's commands run on that platf
 - `bun run test:smoke`: the smoke tests on the host operating system. `bun run test:smoke -- <number|name>` runs one scenario.
 - `bun run test:smoke:and`: the smoke tests on an attached Android emulator or device.
 - `bun run test:smoke:ios`: the smoke tests on a connected iPhone or iPad when there is one, otherwise the iOS simulator.
+- `bun run dev`: run the app in dev mode: Vite (the `dev:ui` script) serves the UI, the dev host runs the core in front of it, rebuilt as its Zig files change, and the default browser opens the dev host, with live reload. `zig build ziggy-test-app-dev -- --no-open` does the same without opening the browser.
 
 ### Building, running and packaging
 `<platform>` is `linux`, `windows`, `macos`, `android` or `ios`.
@@ -145,7 +146,7 @@ Run from the root of this repository. Each platform's commands run on that platf
 - The native apps: [Android](shells/android/README.md), [iOS](shells/ios/README.md), [macOS](shells/macos/README.md), [Windows](shells/windows/README.md).
 - [Ziggy](../ziggy/README.md): what Ziggy is, and its glossary.
 - [Ziggy architecture](../ziggy/docs/architecture.md): the parts, the message protocol, the test hooks and how to add a channel, a task type or a native host callback.
-- [Building your app](../ziggy/docs/building-your-app.md): starting an app from the Ziggy example.
+- [Building your app](../ziggy/docs/building-your-app.md): starting an app from the Ziggy template.
 - [Integrating Ziggy](../ziggy/docs/integrating-ziggy.md): how each kind of project takes Ziggy.
 - [Distributing your app](../ziggy/docs/distributing-your-app.md): packaging, signing and getting builds to testers.
 - [Releasing Ziggy](../ziggy/docs/releasing-ziggy.md): how Ziggy's release workflow and version tags work.

@@ -1,6 +1,6 @@
 # run.sh
 
-Runs the Ziggy test app's smoke test scenarios for one platform. Invoked by the root `package.json` scripts `test:ziggy-test-app`, `test:ziggy-test-app:and` and `test:ziggy-test-app:ios`, never directly.
+Runs the Ziggy test app's smoke test scenarios for one platform. Invoked by the `package.json` scripts `test:smoke`, `test:smoke:and` and `test:smoke:ios`, never directly.
 
 ## Arguments
 

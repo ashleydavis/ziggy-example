@@ -1,6 +1,6 @@
 # Ziggy test app, Windows native app
 
-The Windows executable of the Ziggy test app. `src/main.zig` names the app and hands it to `ziggy-native-windows` (`packages/ziggy/native/windows`), which does everything else.
+The Windows executable of the Ziggy test app. `src/main.zig` names the app and hands it to `ziggy-native-windows` (`../ziggy/packages/ziggy/native/windows`), which does everything else.
 
 ## What the native app does
 
@@ -25,6 +25,6 @@ Every failure prints a message and ends the process with a non-zero code.
 
 ## Building
 
-From a Git Bash terminal at the repository root, run `bun run --filter=ziggy-test-app setup` once to fetch the WebView2 SDK and the WiX Toolset and install the C++ toolchain and the Windows SDK where they are missing, then `bun run build:ziggy-test-app:windows` or `bun run run:ziggy-test-app:windows`. See the example's README for what Windows needs. The build installs `ziggy-test-app.exe`, which is the whole app, into `zig-out/ziggy-test-app`. The scripts are described beside them. The native app needs the WebView2 runtime on the machine, which Windows 11 and current Windows 10 have.
+From a Git Bash terminal at the repository root, run `bun run --filter=ziggy-test-app setup` once to fetch the WebView2 SDK and the WiX Toolset and install the C++ toolchain and the Windows SDK where they are missing, then `bun run build:windows` or `bun run run:windows`. See the example's README for what Windows needs. The build installs `ziggy-test-app.exe`, which is the whole app, into `zig-out/ziggy-test-app`. The scripts are described beside them. The native app needs the WebView2 runtime on the machine, which Windows 11 and current Windows 10 have.
 
 Dropped files: the inject script posts the dropped Files to the host with `chrome.webview.postMessageWithAdditionalObjects`, and the web message handler reads each File's path (`ICoreWebView2File::get_Path`) and records the paths with the core.
