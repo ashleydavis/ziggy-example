@@ -27,7 +27,7 @@ BASE_NAME="ziggy-test-app-$VERSION-linux-$ARCHITECTURE"
 
 (cd "$EXAMPLE_DIR" && bun run bundle:ui)
 STAGE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ziggy-test-app-package-XXXXXX")"
-(cd "$EXAMPLE_DIR" && zig build ziggy-test-app-linux -Doptimize=ReleaseSafe -p "$STAGE_DIR/prefix")
+(cd "$EXAMPLE_DIR" && zig build ziggy-test-app-linux -Doptimize=ReleaseSafe -Dstrip=true -p "$STAGE_DIR/prefix")
 mkdir -p "$OUTPUT_DIR"
 
 # The zip holds the executable, which has the UI embedded, in one folder.
