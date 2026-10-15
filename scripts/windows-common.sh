@@ -23,7 +23,7 @@ WINDOWS_WIX_ROOT="$WINDOWS_EXAMPLE_DIR/wix"
 WINDOWS_WIX_DIR="$WINDOWS_WIX_ROOT/wix-$WIX_VERSION"
 
 # The name of the directory inside an install prefix that holds the exe, which is the whole app.
-WINDOWS_APP_DIR_NAME="ziggy-test-app"
+WINDOWS_APP_DIR_NAME="ziggy-example-vite"
 
 #
 # Prints the Zig target for an architecture name, or fails. Only x64 can be built: the WebView2 loader is linked from the SDK's

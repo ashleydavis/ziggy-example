@@ -7,7 +7,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/apple-common.sh"
 
-apple_require_ios
+apple_require_macos
 apple_require_xcode
 NATIVE_DIR="$APPLE_EXAMPLE_DIR/shells/ios/zig-out"
 BUILD_DIR="$APPLE_EXAMPLE_DIR/shells/ios/zig-out/xcode"
@@ -30,8 +30,8 @@ done
 
 for configuration in Debug Release; do
     xcodebuild \
-        -project "$APPLE_EXAMPLE_DIR/shells/ios/ZiggyTestApp.xcodeproj" \
-        -scheme ZiggyTestApp \
+        -project "$APPLE_EXAMPLE_DIR/shells/ios/ZiggyExampleVite.xcodeproj" \
+        -scheme ZiggyExampleVite \
         -configuration "$configuration" \
         -sdk iphonesimulator \
         -derivedDataPath "$BUILD_DIR" \
@@ -39,7 +39,7 @@ for configuration in Debug Release; do
         ZIGGY_NATIVE_DIR="$NATIVE_DIR" \
         clean
 done
-rm -f "$NATIVE_DIR/lib/libziggy_test_app.a" "$NATIVE_DIR/include/ziggy.h"
+rm -f "$NATIVE_DIR/lib/libziggy_example_vite.a" "$NATIVE_DIR/include/ziggy.h"
 if [ -d "$APPLE_EXAMPLE_DIR/out/ios" ]; then
     find "$APPLE_EXAMPLE_DIR/out/ios" -type f -delete
 fi

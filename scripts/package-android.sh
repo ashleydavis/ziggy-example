@@ -42,7 +42,7 @@ mkdir -p "$output_dir"
 for arch in $arch_list; do
     bash "$ZIGGY_ANDROID_SCRIPTS_DIR/sync-android.sh" --arch "$arch" --optimize ReleaseSmall
     ziggy_android_gradle assembleRelease "-PziggyVersionName=$version" "-PziggyVersionCode=$version_code"
-    artifact="$output_dir/ziggy-test-app-$version-android-$arch.apk"
+    artifact="$output_dir/ziggy-example-vite-$version-android-$arch.apk"
     cp "$ZIGGY_ANDROID_PROJECT_DIR/app/build/outputs/apk/release/app-release.apk" "$artifact"
     echo "Packaged $artifact"
 done

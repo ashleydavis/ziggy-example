@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Runs the Ziggy test app's smoke tests on the host operating system. See run-desktop.md.
+# Runs the Ziggy Vite example's smoke tests on the host operating system. See run-desktop.md.
 
 set -eu
 

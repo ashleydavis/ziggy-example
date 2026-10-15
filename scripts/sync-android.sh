@@ -109,14 +109,14 @@ for arch in $arch_list; do
             ;;
     esac
     echo "Building the Zig library for $abi ($optimize, $test_hooks_argument)..."
-    (cd "$ZIGGY_EXAMPLE_DIR" && zig build ziggy-test-app-core \
+    (cd "$ZIGGY_EXAMPLE_DIR" && zig build ziggy-example-vite-core \
         "-Dtarget=$triple" \
         "-Doptimize=$optimize" \
         "$test_hooks_argument" \
         --libc "$generated_dir/zig-libc/$arch.txt" \
         -p "$generated_dir/zig-out/$abi")
     mkdir -p "$generated_dir/jniLibs/$abi"
-    cp "$generated_dir/zig-out/$abi/lib/libziggy_test_app.so" "$generated_dir/jniLibs/$abi/libziggy_test_app.so"
+    cp "$generated_dir/zig-out/$abi/lib/libziggy_example_vite.so" "$generated_dir/jniLibs/$abi/libziggy_example_vite.so"
 done
 
 echo "Synced into $generated_dir"

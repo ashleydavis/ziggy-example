@@ -5,7 +5,7 @@
 #   source ./android-env.sh
 #
 # This exists so `bun run` scripts work without the caller exporting JAVA_HOME / ANDROID_HOME. Sourced
-# by the Ziggy test app's Android scripts, which drive Gradle and native-run
+# by the Ziggy Vite example's Android scripts, which drive Gradle and native-run
 # and so need the same toolchain.
 #
 # Exits non-zero with a clear message when either piece is missing, which beats the errors the tools

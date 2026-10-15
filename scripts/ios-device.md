@@ -1,6 +1,6 @@
 # ios-device
 
-Drives a connected iOS device for `run-ios.sh` and for the Ziggy test app's iOS smoke tests when a device is connected (`bun run test:smoke:ios`, platform library `smoke-tests/lib/ios-device.sh`). Xcode 14 has no command for running an app on a device, so it uses native-run's device library, the one Capacitor's `cap run ios` deploys with. It runs under Node (pinned in `mise.toml`), because Bun's sockets cannot carry the TLS session native-run starts on a device service.
+Drives a connected iOS device for `run-ios.sh`. Xcode 14 has no command for running an app on a device, so it uses native-run's device library, the one Capacitor's `cap run ios` deploys with. It runs under Node (pinned in `mise.toml`), because Bun's sockets cannot carry the TLS session native-run starts on a device service.
 
 ## Usage
 
@@ -11,7 +11,7 @@ Drives a connected iOS device for `run-ios.sh` and for the Ziggy test app's iOS 
 ## Arguments
 
 - `<udid>`: the device's identifier, as `node_modules/.bin/native-run ios --list` prints it.
-- `<bundle-id>`: the app's bundle identifier, `dev.ziggy.testapp`.
+- `<bundle-id>`: the app's bundle identifier, `dev.ziggy.examplevite`.
 - `<app-path>`: the `.app` built for a device by `build-ios.sh --sdk device`.
 - `<info-file>`: where the JSON describing the listening port is written.
 - `NAME=VALUE`: an environment variable for the app.

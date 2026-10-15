@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Prints the release notes for a build: one bullet per commit made since the last release tag.
 #
-# Used by the release workflow, which lists the commits in the GitHub release of the Ziggy test app, and by the
+# Used by the release workflow, which lists the commits in the GitHub release of the Ziggy Vite example, and by the
 # example's Android tester distribution, which lists them in the note testers read beside the build.
 #
 # Nothing is written and nothing but the notes goes to stdout, so a caller can capture it directly.

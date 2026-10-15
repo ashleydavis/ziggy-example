@@ -12,7 +12,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/windows-common.sh"
 #
 remove_install() {
     local app_dir="$1"
-    rm -f "$app_dir/ziggy-test-app.exe" "$app_dir/ziggy-test-app.pdb"
+    rm -f "$app_dir/ziggy-example-vite.exe" "$app_dir/ziggy-example-vite.pdb"
     rmdir "$app_dir" 2> /dev/null || true
 }
 
@@ -23,7 +23,7 @@ for arch in x64 arm64; do
     remove_install "$WINDOWS_SHELL_DIR/package/$arch/$WINDOWS_APP_DIR_NAME"
     rm -f "$WINDOWS_SHELL_DIR/package/$arch/package-windows.wixobj"
     rmdir "$WINDOWS_SHELL_DIR/package/$arch" 2> /dev/null || true
-    rm -f "$WINDOWS_EXAMPLE_DIR/out/windows/ziggy-test-app-$version-windows-$arch.zip"
-    rm -f "$WINDOWS_EXAMPLE_DIR/out/windows/ziggy-test-app-$version-windows-$arch.msi"
+    rm -f "$WINDOWS_EXAMPLE_DIR/out/windows/ziggy-example-vite-$version-windows-$arch.zip"
+    rm -f "$WINDOWS_EXAMPLE_DIR/out/windows/ziggy-example-vite-$version-windows-$arch.msi"
 done
 rmdir "$WINDOWS_EXAMPLE_DIR/out/windows" 2> /dev/null || true

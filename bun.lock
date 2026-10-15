@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "ziggy-test-app",
+      "name": "ziggy-example-vite",
       "dependencies": {
         "ziggy-ui": "git+https://github.com/ashleydavis/ziggy.git#v0.0.1",
       },

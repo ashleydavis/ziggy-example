@@ -1,6 +1,6 @@
 # clean-macos
 
-Runs `xcodebuild clean` for the Debug and Release configurations and removes the synced `lib/libziggy_test_app.a` and `include/ziggy.h`, and the files of the packages in `out/macos`, one at a time.
+Runs `xcodebuild clean` for the Debug and Release configurations and removes the synced `lib/libziggy_example_vite.a` and `include/ziggy.h`, and the files of the packages in `out/macos`, one at a time.
 
 Run it on a Mac: `bash scripts/clean-macos.sh`.
 

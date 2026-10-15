@@ -7,4 +7,4 @@ set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/windows-common.sh"
 
 bash "$WINDOWS_SCRIPTS_DIR/sync-windows.sh"
-exec "$WINDOWS_SHELL_DIR/zig-out/$WINDOWS_APP_DIR_NAME/ziggy-test-app.exe" "$@"
+exec "$WINDOWS_SHELL_DIR/zig-out/$WINDOWS_APP_DIR_NAME/ziggy-example-vite.exe" "$@"

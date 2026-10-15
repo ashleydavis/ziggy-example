@@ -2,11 +2,11 @@ const std = @import("std");
 const ziggy_build = @import("ziggy");
 
 //
-// Builds the Ziggy test app, an app built on Ziggy the way every app is: it takes Ziggy as the dependency named "ziggy" in
-// build.zig.zon, builds its core as a library with the `ziggy-test-app-core` step, and its Linux and Windows shells with the
-// `ziggy-test-app-linux` and `ziggy-test-app-windows` steps. The Xcode projects and the Android project are built by the app's scripts,
-// which ask the `ziggy-test-app-core` step for the core's library. `ziggy-test-app-dev` runs it in dev mode, with the UI in a browser, which comes
-// with the core. `test` runs the unit tests of the example's core.
+// Builds the Ziggy Vite example, an app built on Ziggy the way every app is: it takes Ziggy as the dependency named "ziggy" in
+// build.zig.zon, builds its backend as a library with the `ziggy-example-vite-core` step, and its Linux and Windows shells with the
+// `ziggy-example-vite-linux` and `ziggy-example-vite-windows` steps. The Xcode projects and the Android project are built by the app's scripts,
+// which ask the `ziggy-example-vite-core` step for the backend's library. `ziggy-example-vite-dev` runs it in dev mode, with the UI in a browser, which comes
+// with the backend. `test` runs the unit tests of the example's backend.
 //
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
@@ -22,15 +22,15 @@ pub fn build(b: *std.Build) !void {
 
     const ziggy = ziggy_build.dependency(b, target, optimize, test_hooks);
     const core = try ziggy_build.addAppCore(b, ziggy, .{
-        .name = "ziggy-test-app",
-        .title = "the Ziggy test app",
-        .root_source_file = "core/src/index.zig",
+        .name = "ziggy-example-vite",
+        .title = "the Ziggy Vite example",
+        .root_source_file = "backend/src/index.zig",
         .ui_directory = "dist",
         .imports = &.{},
     }, target, optimize);
     const app: ziggy_build.IShellApp = .{
-        .name = "ziggy-test-app",
-        .title = "the Ziggy test app",
+        .name = "ziggy-example-vite",
+        .title = "the Ziggy Vite example",
         .directory = ".",
         .linux_icon = null,
         .windows_resource = null,
@@ -38,25 +38,25 @@ pub fn build(b: *std.Build) !void {
     try ziggy_build.addLinuxShell(b, app, strip, target, optimize, ziggy, core.static_library);
     try ziggy_build.addWindowsShell(b, app, compile_only, strip, target, optimize, ziggy, core.static_library);
 
-    // The unit tests of the example's core, which run it with Ziggy's test hooks compiled in.
+    // The unit tests of the example's backend, which run it with Ziggy's test hooks compiled in.
     const test_ziggy = ziggy_build.dependency(b, target, optimize, true);
     const example_for_tests = b.createModule(.{
-        .root_source_file = b.path("core/src/handlers.zig"),
+        .root_source_file = b.path("backend/src/handlers.zig"),
         .target = target,
         .optimize = optimize,
         .link_libc = true,
     });
     example_for_tests.addImport("ziggy-core", test_ziggy.module);
     example_for_tests.addImport("ui-files", try ziggy_build.embedUi(b, test_ziggy.module, "ziggy-core", "dist"));
-    const test_step = b.step("test", "Run the unit tests of the Ziggy test app's core");
-    const test_binary_step = b.step("test-binary-ziggy-test-app-core", "Build the unit test program of the Ziggy test app's core and install it to test-bin without running it");
-    try ziggy_build.addDirectoryTests(b, test_step, "core", &.{
+    const test_step = b.step("test", "Run the unit tests of the Ziggy Vite example's core");
+    const test_binary_step = b.step("test-binary-ziggy-example-vite-core", "Build the unit test program of the Ziggy Vite example's core and install it to test-bin without running it");
+    try ziggy_build.addDirectoryTests(b, test_step, "backend", &.{
         .{
             .name = "ziggy-core",
             .module = test_ziggy.module,
         },
         .{
-            .name = "ziggy-test-app-core",
+            .name = "ziggy-example-vite-core",
             .module = example_for_tests,
         },
     }, target, optimize, test_binary_step);

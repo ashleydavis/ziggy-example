@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# The MacOS platform library of the Ziggy test app's smoke tests. See common.sh for what it implements.
+# The MacOS platform library of the Ziggy Vite example's smoke tests. See common.sh for what it implements.
 #
-# The app is the built ZiggyTestApp.app's executable, started directly so its process group is known. Each scenario gets a
+# The app is the built ZiggyExampleVite.app's executable, started directly so its process group is known. Each scenario gets a
 # home directory of its own (HOME and CFFIXED_USER_HOME), so the app's Application Support directory is isolated. The app
 # opens a real window, so the run needs a logged-in graphical session.
 
@@ -20,7 +20,7 @@ ziggy_platform_prepare() {
 ziggy_platform_start() {
     local test_dir="$1"
     local kind="$2"
-    local app="$ZIGGY_SMOKE_RUN_DIR/$kind-build/Build/Products/Release/ZiggyTestApp.app/Contents/MacOS/ZiggyTestApp"
+    local app="$ZIGGY_SMOKE_RUN_DIR/$kind-build/Build/Products/Release/ZiggyExampleVite.app/Contents/MacOS/ZiggyExampleVite"
     local log="$test_dir/app.log"
     local port_file="$test_dir/control-port.txt"
     rm -f "$port_file"
@@ -64,7 +64,7 @@ ziggy_platform_stop() {
 }
 
 ziggy_platform_data_dir() {
-    printf '%s\n' "$1/home/Library/Application Support/dev.ziggy.testapp"
+    printf '%s\n' "$1/home/Library/Application Support/dev.ziggy.examplevite"
 }
 
 ziggy_platform_wait_exit() {
@@ -87,11 +87,11 @@ ziggy_platform_is_running() {
     process_group_alive "$(cat "$test_dir/$MACOS_PGID_FILE_NAME")"
 }
 
-# The Zig static library carries the core, so it is what scenario 8 searches. The app's executable is not searched,
+# The Zig static library carries the backend, so it is what scenario 8 searches. The app's executable is not searched,
 # because the linker may drop code the app never reaches.
 ziggy_platform_artifact_files() {
     local kind="$1"
-    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind-native/lib/libziggy_test_app.a"
+    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind-native/lib/libziggy_example_vite.a"
 }
 
 ziggy_platform_has_control_port() {

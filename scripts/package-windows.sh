@@ -16,7 +16,7 @@ windows_require_wix
 version="$(windows_app_version)"
 package_dir="$WINDOWS_EXAMPLE_DIR/out/windows"
 prefix="$WINDOWS_SHELL_DIR/package/$arch"
-artifact_base="ziggy-test-app-$version-windows-$arch"
+artifact_base="ziggy-example-vite-$version-windows-$arch"
 mkdir -p "$package_dir"
 
 bash "$WINDOWS_SCRIPTS_DIR/sync-windows.sh" --arch "$arch" --prefix "$prefix" --optimize ReleaseSafe --strip

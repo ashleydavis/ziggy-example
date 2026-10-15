@@ -26,13 +26,13 @@ while [ $# -gt 0 ]; do
 done
 
 VERSION="$(apple_package_version)"
-BASE_NAME="ziggy-test-app-$VERSION-ios-arm64"
+BASE_NAME="ziggy-example-vite-$VERSION-ios-arm64"
 mkdir -p "$OUTPUT_DIR" "$BUILD_DIR"
 
 bash "$SCRIPT_DIR/sync-ios.sh" --sdk device --arch arm64 --native-dir "$BUILD_DIR/native"
 xcodebuild archive \
-    -project "$APPLE_EXAMPLE_DIR/shells/ios/ZiggyTestApp.xcodeproj" \
-    -scheme ZiggyTestApp \
+    -project "$APPLE_EXAMPLE_DIR/shells/ios/ZiggyExampleVite.xcodeproj" \
+    -scheme ZiggyExampleVite \
     -configuration Release \
     -sdk iphoneos \
     -destination "generic/platform=iOS" \
@@ -46,8 +46,8 @@ xcodebuild archive \
 
 # An .ipa is a zip with the app inside a Payload directory. The staging directory is reused between runs and brought into
 # line with the new archive.
-mkdir -p "$BUILD_DIR/ipa-staging/Payload/ZiggyTestApp.app"
-rsync -a --delete "$OUTPUT_DIR/$BASE_NAME.xcarchive/Products/Applications/ZiggyTestApp.app/" "$BUILD_DIR/ipa-staging/Payload/ZiggyTestApp.app/"
+mkdir -p "$BUILD_DIR/ipa-staging/Payload/ZiggyExampleVite.app"
+rsync -a --delete "$OUTPUT_DIR/$BASE_NAME.xcarchive/Products/Applications/ZiggyExampleVite.app/" "$BUILD_DIR/ipa-staging/Payload/ZiggyExampleVite.app/"
 (cd "$BUILD_DIR/ipa-staging" && ditto -c -k --sequesterRsrc --keepParent Payload "$OUTPUT_DIR/$BASE_NAME.ipa")
 
 echo "Archived $OUTPUT_DIR/$BASE_NAME.xcarchive and packed the unsigned $OUTPUT_DIR/$BASE_NAME.ipa"

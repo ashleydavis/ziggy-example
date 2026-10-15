@@ -1,6 +1,6 @@
 # build-macos
 
-Runs `sync-macos.sh`, then `xcodebuild` on `shells/macos/ZiggyTestApp.xcodeproj`, producing `<build-dir>/Build/Products/<configuration>/ZiggyTestApp.app`. The app is ad hoc signed.
+Runs `sync-macos.sh`, then `xcodebuild` on `shells/macos/ZiggyExampleVite.xcodeproj`, producing `<build-dir>/Build/Products/<configuration>/ZiggyExampleVite.app`. The app is ad hoc signed.
 
 Run it on a Mac with Xcode: `bash scripts/build-macos.sh`.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# The Windows platform library of the Ziggy test app's smoke tests. See common.sh for what it implements.
+# The Windows platform library of the Ziggy Vite example's smoke tests. See common.sh for what it implements.
 #
 # Run it under Git Bash on Windows. The app opens a normal window on the desktop of the session, so no virtual display is
 # needed. Each scenario points LOCALAPPDATA at its own directory, which is where the app keeps its data and WebView2 keeps
@@ -33,7 +33,7 @@ ziggy_platform_prepare() {
 ziggy_platform_start() {
     local test_dir="$1"
     local kind="$2"
-    local app="$ZIGGY_SMOKE_RUN_DIR/$kind/ziggy-test-app/ziggy-test-app.exe"
+    local app="$ZIGGY_SMOKE_RUN_DIR/$kind/ziggy-example-vite/ziggy-example-vite.exe"
     local log="$test_dir/app.log"
     local port_file="$test_dir/control-port.txt"
     rm -f "$port_file"
@@ -75,7 +75,7 @@ ziggy_platform_stop() {
     fi
     if [ "${2:-}" = "keep-device" ]; then
         # The app is about to start again on the same data. WebView2 refuses to create its controller while the first run's browser
-        # process still holds the user data folder: the Windows job of the Ziggy test app workflow failed scenario 17-ui-storage
+        # process still holds the user data folder: the Windows job of the Ziggy Vite example workflow failed scenario 17-ui-storage
         # on its restart with "ziggy shell: creating the WebView2 controller failed with HRESULT 0x800700AA" (ERROR_BUSY). So the
         # restart waits until no WebView2 process is left.
         local waited=0
@@ -91,7 +91,7 @@ ziggy_platform_stop() {
 }
 
 ziggy_platform_data_dir() {
-    printf '%s\n' "$1/data/dev.ziggy.testapp"
+    printf '%s\n' "$1/data/dev.ziggy.examplevite"
 }
 
 ziggy_platform_wait_exit() {
@@ -116,7 +116,7 @@ ziggy_platform_is_running() {
 
 ziggy_platform_artifact_files() {
     local kind="$1"
-    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind/ziggy-test-app/ziggy-test-app.exe"
+    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind/ziggy-example-vite/ziggy-example-vite.exe"
 }
 
 ziggy_platform_has_control_port() {

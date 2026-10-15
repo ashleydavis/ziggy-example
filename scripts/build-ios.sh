@@ -90,8 +90,8 @@ else
 fi
 
 xcodebuild \
-    -project "$APPLE_EXAMPLE_DIR/shells/ios/ZiggyTestApp.xcodeproj" \
-    -scheme ZiggyTestApp \
+    -project "$APPLE_EXAMPLE_DIR/shells/ios/ZiggyExampleVite.xcodeproj" \
+    -scheme ZiggyExampleVite \
     -configuration "$CONFIGURATION" \
     -sdk "$XCODE_SDK" \
     -derivedDataPath "$BUILD_DIR" \
@@ -103,4 +103,4 @@ xcodebuild \
     MARKETING_VERSION="$(apple_package_version)" \
     build
 
-echo "Built $BUILD_DIR/Build/Products/$PRODUCTS_NAME/ZiggyTestApp.app"
+echo "Built $BUILD_DIR/Build/Products/$PRODUCTS_NAME/ZiggyExampleVite.app"

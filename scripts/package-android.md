@@ -9,4 +9,4 @@ Invoke: `bash scripts/package-android.sh [--arch "<list>"] [--output-dir <dir>] 
 - `--version-code <number>`: the whole number Android uses to tell a newer build from an older one, which has to go up with every build that replaces another on a phone. The default is 1.
 - `--output-dir <dir>`: where the APKs go. The default is `out/android`.
 
-The artifacts are named `ziggy-test-app-<version>-android-<arch>.apk`, with the version from `package.json`.
+The artifacts are named `ziggy-example-vite-<version>-android-<arch>.apk`, with the version from `package.json`.

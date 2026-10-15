@@ -1,6 +1,6 @@
 # build-ios
 
-Runs `sync-ios.sh`, then `xcodebuild` on `shells/ios/ZiggyTestApp.xcodeproj`, with code signing off for the simulator and automatic signing by the Xcode account's team (or `ZIGGY_IOS_TEAM`) for a device, producing `<build-dir>/Build/Products/<configuration>-iphonesimulator/ZiggyTestApp.app` (or `-iphoneos`).
+Runs `sync-ios.sh`, then `xcodebuild` on `shells/ios/ZiggyExampleVite.xcodeproj`, with code signing off for the simulator and automatic signing by the Xcode account's team (or `ZIGGY_IOS_TEAM`) for a device, producing `<build-dir>/Build/Products/<configuration>-iphonesimulator/ZiggyExampleVite.app` (or `-iphoneos`).
 
 Run it on a Mac with Xcode: `bash scripts/build-ios.sh`.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# The Linux platform library of the Ziggy test app's smoke tests. See common.sh for what it implements.
+# The Linux platform library of the Ziggy Vite example's smoke tests. See common.sh for what it implements.
 #
 # The app runs on a virtual display of its own, so a run shows no window and two runs never share a display.
 # WebKitGTK starts its web process in a bubblewrap sandbox, which some Linux setups do not allow an unprivileged
@@ -16,8 +16,8 @@ LINUX_PGID_FILE_NAME="app.pgid"
 ziggy_platform_prepare() {
     local run_dir="$1"
     (cd "$LINUX_EXAMPLE_DIR" && bun run bundle:ui) || return 1
-    (cd "$LINUX_EXAMPLE_DIR" && zig build ziggy-test-app-linux -Dtest-hooks=true -p "$run_dir/test") || return 1
-    (cd "$LINUX_EXAMPLE_DIR" && zig build ziggy-test-app-linux -p "$run_dir/release") || return 1
+    (cd "$LINUX_EXAMPLE_DIR" && zig build ziggy-example-vite-linux -Dtest-hooks=true -p "$run_dir/test") || return 1
+    (cd "$LINUX_EXAMPLE_DIR" && zig build ziggy-example-vite-linux -p "$run_dir/release") || return 1
     # The UI is embedded in the executable, so nothing but the executable is installed. A scenario that passes proves the
     # UI loads from the executable alone, which is why nothing is copied beside it.
     local installed
@@ -32,7 +32,7 @@ ziggy_platform_prepare() {
 ziggy_platform_start() {
     local test_dir="$1"
     local kind="$2"
-    local app="$ZIGGY_SMOKE_RUN_DIR/$kind/bin/ziggy-test-app"
+    local app="$ZIGGY_SMOKE_RUN_DIR/$kind/bin/ziggy-example-vite"
     local log="$test_dir/app.log"
     local port_file="$test_dir/control-port.txt"
     rm -f "$port_file"
@@ -76,7 +76,7 @@ ziggy_platform_stop() {
 }
 
 ziggy_platform_data_dir() {
-    printf '%s\n' "$1/data/dev.ziggy.testapp"
+    printf '%s\n' "$1/data/dev.ziggy.examplevite"
 }
 
 ziggy_platform_wait_exit() {
@@ -101,7 +101,7 @@ ziggy_platform_is_running() {
 
 ziggy_platform_artifact_files() {
     local kind="$1"
-    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind/bin/ziggy-test-app"
+    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind/bin/ziggy-example-vite"
 }
 
 ziggy_platform_has_control_port() {

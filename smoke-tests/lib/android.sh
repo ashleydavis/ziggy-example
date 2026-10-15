@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# The Android platform library of the Ziggy test app's smoke tests. See common.sh for what it implements.
+# The Android platform library of the Ziggy Vite example's smoke tests. See common.sh for what it implements.
 #
 # The app runs on an emulator or device, driven from the host with adb. Both builds are debug-type APKs, so run-as can read
 # what the app writes (the test control port file), and they differ in the Zig library inside: the test build has the test
@@ -13,7 +13,7 @@
 
 ANDROID_EXAMPLE_DIR="$ZIGGY_SMOKE_APP_DIR"
 ANDROID_SCRIPTS_DIR="$ANDROID_EXAMPLE_DIR/scripts"
-ANDROID_APP_ID="dev.ziggy.testapp"
+ANDROID_APP_ID="dev.ziggy.examplevite"
 
 # Where the app writes its control port, inside its private files directory (the Intent extra carries the full path).
 ANDROID_PORT_FILE_DEVICE_PATH="/data/data/$ANDROID_APP_ID/files/ziggy-control-port.txt"
@@ -219,7 +219,7 @@ ziggy_platform_data_dir() {
 
 #
 # Whether the app is running, which on Android means its activity exists. Quitting finishes the activity, whose onDestroy
-# destroys the core and so stops every thread and task the core started. Android then keeps the emptied process cached for
+# destroys the backend and so stops every thread and task the backend started. Android then keeps the emptied process cached for
 # a later launch, so a process that is still listed is not a sign the app is still running.
 #
 ziggy_platform_is_running() {

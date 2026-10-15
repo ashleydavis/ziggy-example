@@ -55,8 +55,8 @@ else
 fi
 
 xcodebuild \
-    -project "$APPLE_EXAMPLE_DIR/shells/macos/ZiggyTestApp.xcodeproj" \
-    -scheme ZiggyTestApp \
+    -project "$APPLE_EXAMPLE_DIR/shells/macos/ZiggyExampleVite.xcodeproj" \
+    -scheme ZiggyExampleVite \
     -configuration "$CONFIGURATION" \
     -derivedDataPath "$BUILD_DIR" \
     -destination "generic/platform=macOS" \
@@ -66,4 +66,4 @@ xcodebuild \
     MARKETING_VERSION="$(apple_package_version)" \
     build
 
-echo "Built $BUILD_DIR/Build/Products/$CONFIGURATION/ZiggyTestApp.app"
+echo "Built $BUILD_DIR/Build/Products/$CONFIGURATION/ZiggyExampleVite.app"

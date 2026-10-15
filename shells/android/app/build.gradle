@@ -1,15 +1,15 @@
-// The Ziggy test app's Android app. The Zig library per ABI and the built UI are generated into build/ziggy by
+// The Ziggy Vite example's Android app. The Zig library per ABI and the built UI are generated into build/ziggy by
 // scripts/sync-android.sh before Gradle runs, so Gradle never runs zig.
 
 apply plugin: 'com.android.application'
 
 android {
-    namespace "dev.ziggy.testapp"
+    namespace "dev.ziggy.examplevite"
     compileSdkVersion rootProject.ext.compileSdkVersion
     ndkVersion rootProject.ext.ndkVersion
 
     defaultConfig {
-        applicationId "dev.ziggy.testapp"
+        applicationId "dev.ziggy.examplevite"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode project.hasProperty('ziggyVersionCode') ? ziggyVersionCode.toInteger() : 1
@@ -47,8 +47,8 @@ dependencies {
 // it runs on a device. Fail the build instead, with the command that fixes it.
 tasks.register('checkZiggySync') {
     doLast {
-        if (!fileTree('build/ziggy/jniLibs').matching { include '**/libziggy_test_app.so' }.any()) {
-            throw new GradleException("No libziggy_test_app.so under build/ziggy/jniLibs.\nRun scripts/sync-android.sh (bun run sync:android) in the app's folder first.")
+        if (!fileTree('build/ziggy/jniLibs').matching { include '**/libziggy_example_vite.so' }.any()) {
+            throw new GradleException("No libziggy_example_vite.so under build/ziggy/jniLibs.\nRun scripts/sync-android.sh (bun run sync:android) in the app's folder first.")
         }
     }
 }

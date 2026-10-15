@@ -31,18 +31,18 @@ while [ $# -gt 0 ]; do
 done
 
 VERSION="$(apple_package_version)"
-BASE_NAME="ziggy-test-app-$VERSION-macos-$ARCH"
+BASE_NAME="ziggy-example-vite-$VERSION-macos-$ARCH"
 mkdir -p "$OUTPUT_DIR" "$BUILD_DIR"
 
 bash "$SCRIPT_DIR/build-macos.sh" --arch "$ARCH" --configuration Release --native-dir "$BUILD_DIR/native" --build-dir "$BUILD_DIR/xcode"
-APP="$BUILD_DIR/xcode/Build/Products/Release/ZiggyTestApp.app"
+APP="$BUILD_DIR/xcode/Build/Products/Release/ZiggyExampleVite.app"
 
 # The disk image holds the app and a link to /Applications. The staging directory is reused between runs and brought into
 # line with the new build.
-mkdir -p "$BUILD_DIR/dmg-staging/ZiggyTestApp.app"
-rsync -a --delete "$APP/" "$BUILD_DIR/dmg-staging/ZiggyTestApp.app/"
+mkdir -p "$BUILD_DIR/dmg-staging/ZiggyExampleVite.app"
+rsync -a --delete "$APP/" "$BUILD_DIR/dmg-staging/ZiggyExampleVite.app/"
 ln -sfn /Applications "$BUILD_DIR/dmg-staging/Applications"
-hdiutil create -volname "Ziggy test app" -srcfolder "$BUILD_DIR/dmg-staging" -ov -format UDZO "$OUTPUT_DIR/$BASE_NAME.dmg"
+hdiutil create -volname "Ziggy Vite example" -srcfolder "$BUILD_DIR/dmg-staging" -ov -format UDZO "$OUTPUT_DIR/$BASE_NAME.dmg"
 ditto -c -k --sequesterRsrc --keepParent "$APP" "$OUTPUT_DIR/$BASE_NAME.zip"
 
 echo "Packed $OUTPUT_DIR/$BASE_NAME.dmg and $OUTPUT_DIR/$BASE_NAME.zip"

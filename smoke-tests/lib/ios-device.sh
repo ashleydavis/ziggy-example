@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# The iOS platform library of the Ziggy test app's smoke tests when a device is connected, sourced by ios.sh in place of its
+# The iOS platform library of the Ziggy Vite example's smoke tests when a device is connected, sourced by ios.sh in place of its
 # simulator functions. See common.sh for what it implements.
 #
 # The app runs on a connected iPhone or iPad: ZIGGY_IOS_DEVICE names one, otherwise the first connected device is used (see
@@ -11,7 +11,7 @@
 # inside it while it is paused.
 #
 # iOS starts an app in the root directory whatever working directory debugserver is given, so the run moves the app into
-# its data container, by calling chdir in it before the core is created, and gives the port file as a path relative to it.
+# its data container, by calling chdir in it before the backend is created, and gives the port file as a path relative to it.
 #
 # A device runs one copy of the app at a time, so a scenario claims the device under a lock for as long as it runs.
 
@@ -19,7 +19,7 @@ IOS_DEVICE_SCRIPTS_DIR="$ZIGGY_SMOKE_APP_DIR/scripts"
 source "$IOS_DEVICE_SCRIPTS_DIR/lib/apple-common.sh"
 
 # The app's bundle identifier.
-IOS_DEVICE_BUNDLE_ID="dev.ziggy.testapp"
+IOS_DEVICE_BUNDLE_ID="dev.ziggy.examplevite"
 
 #
 # Prints where the app writes its control port, relative to its data container. The container outlives the app, so each
@@ -213,7 +213,7 @@ ziggy_platform_prepare() {
 ziggy_platform_start() {
     local test_dir="$1"
     local kind="$2"
-    local app="$ZIGGY_SMOKE_RUN_DIR/$kind-build/Build/Products/Release-iphoneos/ZiggyTestApp.app"
+    local app="$ZIGGY_SMOKE_RUN_DIR/$kind-build/Build/Products/Release-iphoneos/ZiggyExampleVite.app"
     local udid
     udid="$(apple_pick_device)" || return 1
     ziggy_ios_device_claim "$udid" || return 1
@@ -240,14 +240,14 @@ ziggy_platform_start() {
     echo "$pgid" > "$test_dir/lldb.pgid"
     ziggy_ios_device_lldb "settings set plugin.process.gdb-remote.packet-timeout 60"
     ziggy_ios_device_lldb "platform select remote-ios"
-    ziggy_ios_device_lldb "target create \"$app/ZiggyTestApp\""
+    ziggy_ios_device_lldb "target create \"$app/ZiggyExampleVite\""
     ziggy_ios_device_lldb "process connect connect://127.0.0.1:$(jq -r '.port' "$test_dir/launch.json")"
     ziggy_ios_device_lldb_wait "$test_dir" '^Process [0-9]+ stopped' 0 || return 1
     # A write to a closed socket raises SIGPIPE, which the app handles as an error. It must not pause the app in lldb.
     ziggy_ios_device_lldb "process handle SIGPIPE --notify false --pass true --stop false"
 
     # The process stops at its first instruction, before Foundation is loaded, when lldb could not evaluate a Foundation
-    # call. It is run on to where the shell creates the core, by which point Foundation is loaded, and Foundation's
+    # call. It is run on to where the shell creates the backend, by which point Foundation is loaded, and Foundation's
     # declarations are imported there, so the expressions that read files compile with their real method signatures.
     local stops_before
     stops_before="$(ziggy_ios_device_lldb_count "$test_dir" 'stop reason = breakpoint')"
@@ -387,10 +387,10 @@ ziggy_platform_is_running() {
     [ -s "$test_dir/launch.json" ] && ! ziggy_ios_device_exited "$test_dir"
 }
 
-# The Zig static library carries the core, so it is what scenario 8 searches.
+# The Zig static library carries the backend, so it is what scenario 8 searches.
 ziggy_platform_artifact_files() {
     local kind="$1"
-    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind-native/lib/libziggy_test_app.a"
+    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind-native/lib/libziggy_example_vite.a"
 }
 
 ziggy_platform_has_control_port() {

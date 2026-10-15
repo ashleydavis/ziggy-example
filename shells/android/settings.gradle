@@ -1,7 +1,7 @@
-// The Ziggy test app's Android project: the app, which takes Ziggy's Android native app from Ziggy's repository on GitHub. Gradle checks
+// The Ziggy Vite example's Android project: the app, which takes Ziggy's Android native app from Ziggy's repository on GitHub. Gradle checks
 // the repository out at the version tag that the dependency `dev.ziggy:ziggy-native-android` in app/build.gradle names, and
 // builds the native app from it.
-rootProject.name = 'ziggy-test-app-android'
+rootProject.name = 'ziggy-example-vite-android'
 
 include ':app'
 sourceControl {

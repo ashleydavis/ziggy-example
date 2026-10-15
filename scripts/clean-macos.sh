@@ -30,15 +30,15 @@ done
 
 for configuration in Debug Release; do
     xcodebuild \
-        -project "$APPLE_EXAMPLE_DIR/shells/macos/ZiggyTestApp.xcodeproj" \
-        -scheme ZiggyTestApp \
+        -project "$APPLE_EXAMPLE_DIR/shells/macos/ZiggyExampleVite.xcodeproj" \
+        -scheme ZiggyExampleVite \
         -configuration "$configuration" \
         -derivedDataPath "$BUILD_DIR" \
         -destination "generic/platform=macOS" \
         ZIGGY_NATIVE_DIR="$NATIVE_DIR" \
         clean
 done
-rm -f "$NATIVE_DIR/lib/libziggy_test_app.a" "$NATIVE_DIR/include/ziggy.h"
+rm -f "$NATIVE_DIR/lib/libziggy_example_vite.a" "$NATIVE_DIR/include/ziggy.h"
 if [ -d "$APPLE_EXAMPLE_DIR/out/macos" ]; then
     find "$APPLE_EXAMPLE_DIR/out/macos" -type f -delete
 fi

@@ -1,7 +1,7 @@
 name: Release
 
-# Builds and tests the Ziggy test app on every platform, packages it for every platform, and, when every one of those passed on
-# the default branch, publishes the packages as the GitHub release named "Ziggy test app", replacing the one before. It runs on
+# Builds and tests the Ziggy Vite example on every platform, packages it for every platform, and, when every one of those passed on
+# the default branch, publishes the packages as the GitHub release named "Ziggy Vite example", replacing the one before. It runs on
 # every push. The app is never version tagged, but a GitHub release is always attached to a git tag, so the release sits on the
 # tag `example`, which this workflow moves to the commit it built. A run that fails anywhere publishes nothing.
 
@@ -22,7 +22,7 @@ on:
 
 jobs:
   zig-build:
-    # Cross-builds the app's core for every platform, with and without the test hooks, and compiles the Windows shell. Zig
+    # Cross-builds the app's backend for every platform, with and without the test hooks, and compiles the Windows shell. Zig
     # cross-builds from any machine, so this runs once, on Linux.
     timeout-minutes: 40
     runs-on: ubuntu-latest
@@ -63,9 +63,9 @@ jobs:
         with:
           path: |
             .zig-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}
+          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-
+            ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-
 
       # Every save is the restored cache plus what the job built, so without this the cache only grows.
       - name: Start fresh Zig build caches when the restored ones have grown too big
@@ -93,13 +93,11 @@ jobs:
         with:
           path: |
             .zig-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}
+          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-${{ github.sha }}
 
   unit-tests:
-    # The unit tests on each platform. The desktop platforms run the TypeScript tests (the app's UI) and every
-    # Zig test (`zig build test`: the app's core) on the runner. Android runs the
-    # Zig test programs on an emulator and the Android shell's JUnit tests on the runner's JVM. iOS runs the Zig test programs on a
-    # simulator, because a program built for a phone cannot run on the runner.
+    # The unit tests on each desktop platform: the TypeScript tests (the app's UI) and every Zig test (`zig build test`: the
+    # app's backend), on the runner.
     timeout-minutes: 50
     strategy:
       fail-fast: false
@@ -111,10 +109,6 @@ jobs:
             os: macos-latest
           - platform: windows
             os: windows-latest
-          - platform: android
-            os: ubuntu-latest
-          - platform: ios
-            os: macos-latest
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -161,74 +155,20 @@ jobs:
         with:
           path: |
             .zig-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}
+          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-
+            ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-
 
       - name: Run the TypeScript unit tests
         if: matrix.platform == 'linux' || matrix.platform == 'macos' || matrix.platform == 'windows'
         shell: bash
         run: bun run test
 
-      # `test:zig` builds the app's UI before it runs the core's tests, which embed it.
+      # `test:zig` builds the app's UI before it runs the backend's tests, which embed it.
       - name: Run the Zig unit tests
         if: matrix.platform == 'linux' || matrix.platform == 'macos' || matrix.platform == 'windows'
         shell: bash
         run: bun run test:zig
-
-      # The Android scripts need JDK 17 and the NDK the app pins.
-      - name: Setup JDK 17 (Android)
-        if: matrix.platform == 'android'
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "17"
-
-      - name: Cache the Android NDK
-        if: matrix.platform == 'android'
-        uses: actions/cache@v4
-        with:
-          path: /usr/local/lib/android/sdk/ndk/25.1.8937393
-          key: ${{ runner.os }}-android-ndk-25.1.8937393
-
-      - name: Install Android NDK (Android)
-        if: matrix.platform == 'android'
-        uses: ./.github/actions/retry-install
-        with:
-          run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;25.1.8937393" > /dev/null
-
-      - name: Enable KVM (Android)
-        if: matrix.platform == 'android'
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-
-      # The script is one line, because this action runs each line of `script:` in a shell of its own.
-      - name: Run the Zig unit tests on an emulator (Android)
-        if: matrix.platform == 'android'
-        timeout-minutes: 30
-        uses: reactivecircus/android-emulator-runner@v2
-        env:
-          ZIGGY_ANDROID_DEVICES: emulator-5554
-        with:
-          api-level: 35
-          arch: x86_64
-          target: google_apis
-          script: bun run test:zig:android
-
-      # The script runs the programs on a booted simulator and fails when none is, so one is booted here.
-      - name: Boot an iOS simulator (iOS)
-        if: matrix.platform == 'ios'
-        shell: bash
-        run: |
-          udid="$(xcrun simctl list devices available -j | jq -r '[.devices | to_entries[] | select(.key | contains("iOS")) | .value[] | select(.name | startswith("iPhone"))][0].udid')"
-          xcrun simctl boot "$udid"
-          xcrun simctl bootstatus "$udid" -b
-
-      - name: Run the Zig unit tests on a simulator (iOS)
-        if: matrix.platform == 'ios'
-        run: bun run test:zig:ios
 
       # Always, so a job that fails part way still leaves what it compiled.
       - name: Save the Zig build caches
@@ -237,7 +177,7 @@ jobs:
         with:
           path: |
             .zig-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}-unit-${{ matrix.platform }}
+          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-${{ github.sha }}-unit-${{ matrix.platform }}
 
   smoke-tests:
     # The app's smoke tests on every platform: Linux on a virtual display, Windows with the WebView2 SDK, MacOS on the runner's
@@ -334,9 +274,9 @@ jobs:
         with:
           path: |
             .zig-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}
+          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-
+            ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-
 
       # A step that hits its own timeout fails normally and keeps its log, so a hang shows up in the log.
       - name: Run the smoke tests (desktop)
@@ -372,7 +312,7 @@ jobs:
         with:
           path: |
             .zig-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}-smoke-${{ matrix.platform }}
+          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-${{ github.sha }}-smoke-${{ matrix.platform }}
 
   package:
     # Packages the app for every platform with its own package scripts, and uploads the packages as artifacts of the run. The
@@ -458,9 +398,9 @@ jobs:
         with:
           path: |
             .zig-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-${{ github.sha }}-smoke-${{ matrix.platform }}
+          key: ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-${{ github.sha }}-smoke-${{ matrix.platform }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-ziggy-test-app-zig-build-
+            ${{ runner.os }}-${{ runner.arch }}-ziggy-example-vite-zig-build-
 
       - name: Package
         shell: bash
@@ -469,12 +409,12 @@ jobs:
       - name: Upload the packages
         uses: actions/upload-artifact@v4
         with:
-          name: ziggy-test-app-${{ matrix.platform }}
+          name: ziggy-example-vite-${{ matrix.platform }}
           path: out/${{ matrix.platform }}/*
 
   publish:
     # Publishes the packaged apps, only when every build, test and package job passed, and only for a push to the default
-    # branch, so a run on another branch or a pull request tests everything and publishes nothing. The release named "Ziggy test app"
+    # branch, so a run on another branch or a pull request tests everything and publishes nothing. The release named "Ziggy Vite example"
     # and its tag `example` are deleted and made again on the commit this run built.
     if: github.event_name == 'push' && github.ref_name == github.event.repository.default_branch
     needs: [zig-build, unit-tests, smoke-tests, package]
@@ -491,7 +431,7 @@ jobs:
       - name: Download the packages
         uses: actions/download-artifact@v4
         with:
-          pattern: ziggy-test-app-*
+          pattern: ziggy-example-vite-*
           path: artifacts
           merge-multiple: true
 
@@ -518,7 +458,7 @@ jobs:
         with:
           tag_name: example
           target_commitish: ${{ github.sha }}
-          name: Ziggy test app
+          name: Ziggy Vite example
           draft: false
           prerelease: true
           files: |
@@ -529,7 +469,7 @@ jobs:
             ./artifacts/*.apk
             ./artifacts/*.ipa
           body: |
-            The Ziggy test app, built, tested and packaged for every platform from commit ${{ github.sha }}.
+            The Ziggy Vite example, built, tested and packaged for every platform from commit ${{ github.sha }}.
 
             ## Commits
             ${{ steps.release-notes.outputs.RELEASE_NOTES }}

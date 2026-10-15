@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    The MSI installer for the Ziggy test app on Windows, compiled by WiX Toolset 3 (candle and light). Built by
+    The MSI installer for the Ziggy Vite example on Windows, compiled by WiX Toolset 3 (candle and light). Built by
     package-windows.sh, which defines:
         Version     the app's version, as major.minor.build
-        SourceDir   the directory holding ziggy-test-app.exe, which is the whole app
-    The installer is unsigned and installs for the current user only, into %LOCALAPPDATA%\Programs\Ziggy test app, so it
+        SourceDir   the directory holding ziggy-example-vite.exe, which is the whole app
+    The installer is unsigned and installs for the current user only, into %LOCALAPPDATA%\Programs\Ziggy Vite example, so it
     needs no administrator rights. It adds a Start menu shortcut, and Windows Installer adds the entry in Installed apps.
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <!-- The UpgradeCode stays the same for every version, so installing a newer one replaces the older one. -->
-    <Product Id="*" Name="Ziggy test app" Language="1033" Version="$(var.Version)" Manufacturer="Ziggy" UpgradeCode="4C568CA5-E3F4-43BE-8FD9-74F135B69B39">
+    <Product Id="*" Name="Ziggy Vite example" Language="1033" Version="$(var.Version)" Manufacturer="Ziggy" UpgradeCode="4C568CA5-E3F4-43BE-8FD9-74F135B69B39">
         <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" InstallPrivileges="limited" Platform="x64" />
-        <MajorUpgrade DowngradeErrorMessage="A newer version of Ziggy test app is already installed." />
+        <MajorUpgrade DowngradeErrorMessage="A newer version of Ziggy Vite example is already installed." />
         <MediaTemplate EmbedCab="yes" />
 
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="LocalAppDataFolder">
                 <Directory Id="ProgramsFolder" Name="Programs">
-                    <Directory Id="INSTALLFOLDER" Name="Ziggy test app" />
+                    <Directory Id="INSTALLFOLDER" Name="Ziggy Vite example" />
                 </Directory>
             </Directory>
             <Directory Id="ProgramMenuFolder" />
@@ -30,8 +30,8 @@
         -->
         <DirectoryRef Id="INSTALLFOLDER">
             <Component Id="AppExecutable" Guid="ABE1B5D9-F9B8-4A53-8BFD-DA137464D7FF" Win64="yes">
-                <File Id="ZiggyTestAppExe" Source="$(var.SourceDir)\ziggy-test-app.exe" KeyPath="no" />
-                <RegistryValue Root="HKCU" Key="Software\dev.ziggy.testapp" Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
+                <File Id="ZiggyExampleViteExe" Source="$(var.SourceDir)\ziggy-example-vite.exe" KeyPath="no" />
+                <RegistryValue Root="HKCU" Key="Software\dev.ziggy.examplevite" Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
                 <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
                 <RemoveFolder Id="RemoveProgramsFolder" Directory="ProgramsFolder" On="uninstall" />
             </Component>
@@ -39,12 +39,12 @@
 
         <DirectoryRef Id="ProgramMenuFolder">
             <Component Id="StartMenuShortcut" Guid="2B4B4AFC-2C7F-4727-B9CE-634F42AB2041" Win64="yes">
-                <Shortcut Id="ZiggyTestAppShortcut" Name="Ziggy test app" Target="[INSTALLFOLDER]ziggy-test-app.exe" WorkingDirectory="INSTALLFOLDER" />
-                <RegistryValue Root="HKCU" Key="Software\dev.ziggy.testapp" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+                <Shortcut Id="ZiggyExampleViteShortcut" Name="Ziggy Vite example" Target="[INSTALLFOLDER]ziggy-example-vite.exe" WorkingDirectory="INSTALLFOLDER" />
+                <RegistryValue Root="HKCU" Key="Software\dev.ziggy.examplevite" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
             </Component>
         </DirectoryRef>
 
-        <Feature Id="App" Title="Ziggy test app" Level="1">
+        <Feature Id="App" Title="Ziggy Vite example" Level="1">
             <ComponentRef Id="AppExecutable" />
             <ComponentRef Id="StartMenuShortcut" />
         </Feature>

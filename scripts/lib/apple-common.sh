@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Shared by the MacOS and iOS scripts of the Ziggy test app. It is sourced, never run. See apple-common.md.
+# Shared by the MacOS and iOS scripts of the Ziggy Vite example. It is sourced, never run. See apple-common.md.
 
 APPLE_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APPLE_EXAMPLE_DIR="$(cd "$APPLE_LIB_DIR/../.." && pwd)"
@@ -72,7 +72,7 @@ apple_zig_arch() {
 }
 
 # Bundles the example's UI and builds the Zig static library, which embeds the UI, so an Xcode build has everything it links.
-# <native_dir> gets lib/libziggy_test_app.a and include/ziggy.h.
+# <native_dir> gets lib/libziggy_example_vite.a and include/ziggy.h.
 # Usage: apple_sync_native <zig_target> <native_dir> <yes|no test hooks> <zig optimize mode>
 apple_sync_native() {
     local zig_target="$1"
@@ -84,24 +84,24 @@ apple_sync_native() {
     (cd "$APPLE_EXAMPLE_DIR" && bun run bundle:ui) || apple_fail "bundling the UI failed."
     echo "Building the Zig library for $zig_target (optimize $optimize, test hooks $test_hooks)..."
     if [ "$test_hooks" = "yes" ]; then
-        (cd "$APPLE_EXAMPLE_DIR" && zig build ziggy-test-app-core -Dtarget="$zig_target" -Doptimize="$optimize" -Dtest-hooks=true -p "$native_dir") || apple_fail "the Zig build failed."
+        (cd "$APPLE_EXAMPLE_DIR" && zig build ziggy-example-vite-core -Dtarget="$zig_target" -Doptimize="$optimize" -Dtest-hooks=true -p "$native_dir") || apple_fail "the Zig build failed."
     else
-        (cd "$APPLE_EXAMPLE_DIR" && zig build ziggy-test-app-core -Dtarget="$zig_target" -Doptimize="$optimize" -p "$native_dir") || apple_fail "the Zig build failed."
+        (cd "$APPLE_EXAMPLE_DIR" && zig build ziggy-example-vite-core -Dtarget="$zig_target" -Doptimize="$optimize" -p "$native_dir") || apple_fail "the Zig build failed."
     fi
     # A workaround for a bug in Zig 0.16.0, which is the pinned version. Its archive writer puts the contents of a long-named
     # member at an offset that is not a multiple of 8, and Xcode 26's linker refuses such an archive: the macOS and iOS jobs of
-    # the Ziggy test app workflow failed with "ld: 64-bit mach-o member 'libziggy_test_app_zcu.o' not 8-byte aligned in
-    # '.../lib/libziggy_test_app.a'". The fix is on Zig's master (ziglang/zig issue 35280) and will not reach 0.16.x. Writing the
+    # the Ziggy Vite example workflow failed with "ld: 64-bit mach-o member 'libziggy_example_vite_zcu.o' not 8-byte aligned in
+    # '.../lib/libziggy_example_vite.a'". The fix is on Zig's master (ziglang/zig issue 35280) and will not reach 0.16.x. Writing the
     # archive again with libtool straight from Zig's archive did not work: libtool warned "64-bit mach-o member
-    # 'libziggy_test_app_zcu.o' not 8-byte aligned" and left that member's symbols out, so the link then failed with undefined
+    # 'libziggy_example_vite_zcu.o' not 8-byte aligned" and left that member's symbols out, so the link then failed with undefined
     # _ziggy_* symbols. So the members are taken out of the archive as files, and libtool writes a new archive from those, which
     # puts every member at an aligned offset.
     echo "Aligning the members of the Zig library..."
-    local library="$native_dir/lib/libziggy_test_app.a"
+    local library="$native_dir/lib/libziggy_example_vite.a"
     local members_dir
     members_dir="$(mktemp -d "$native_dir/members.XXXXXX")" || apple_fail "could not make a directory for the library's members."
     (cd "$members_dir" && xcrun ar x "$library") || apple_fail "could not take the members out of the Zig library."
-    # ar x gives each file the mode stored in Zig's archive, which leaves it unreadable: the macOS job of the Ziggy test app
+    # ar x gives each file the mode stored in Zig's archive, which leaves it unreadable: the macOS job of the Ziggy Vite example
     # workflow logged "libtool: warning: cannot open() '.../members.CzH9Kq/compiler_rt.o', errno=13" (EACCES) for each member
     # and the link then failed with undefined _ziggy_* symbols.
     chmod u+rw "$members_dir"/*.o || apple_fail "could not make the Zig library's members readable."

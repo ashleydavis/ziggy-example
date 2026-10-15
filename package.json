@@ -1,8 +1,8 @@
 {
-  "name": "ziggy-test-app",
+  "name": "ziggy-example-vite",
   "version": "1.0.0",
   "private": true,
-  "description": "The Ziggy test app: a small complete app built on Ziggy, kept as the reference for building an app on it.",
+  "description": "The Ziggy Vite example: the hello world app on Vite, taking Ziggy from a release.",
   "type": "module",
   "scripts": {
     "compile": "tsc --noEmit",
@@ -10,10 +10,7 @@
     "bundle:ui": "bash ./scripts/bundle-ui.sh",
     "test": "jest",
     "t": "bun run test",
-    "test:smoke": "bash ./smoke-tests/run-desktop.sh",
-    "test:smoke:and": "bash ./smoke-tests/run.sh android",
-    "test:smoke:ios": "bash ./smoke-tests/run.sh ios",
-    "dev": "zig build ziggy-test-app-dev",
+    "dev": "zig build ziggy-example-vite-dev",
     "dev:ui": "vite",
     "sync:linux": "bash ./scripts/sync-linux.sh",
     "sync:windows": "bash ./scripts/sync-windows.sh",
@@ -49,9 +46,10 @@
     "setup": "bash ./scripts/setup.sh",
     "compile:zig": "bash ./scripts/zig-packages.sh build && bash ./scripts/zig-packages.sh cross",
     "test:zig": "bash ./scripts/zig-packages.sh test",
-    "test:zig:android": "bash ./scripts/test-zig-mobile.sh android",
-    "test:zig:ios": "bash ./scripts/test-zig-mobile.sh ios",
-    "distribute:android": "bash ./scripts/distribute-android.sh"
+    "distribute:android": "bash ./scripts/distribute-android.sh",
+    "test:smoke": "bash ./smoke-tests/run-desktop.sh",
+    "test:smoke:and": "bash ./smoke-tests/run.sh android",
+    "test:smoke:ios": "bash ./smoke-tests/run.sh ios"
   },
   "dependencies": {
     "ziggy-ui": "git+https://github.com/ashleydavis/ziggy.git#v0.0.1"

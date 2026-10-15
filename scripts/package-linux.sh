@@ -23,40 +23,40 @@ case "$ARCHITECTURE" in
         exit 1
         ;;
 esac
-BASE_NAME="ziggy-test-app-$VERSION-linux-$ARCHITECTURE"
+BASE_NAME="ziggy-example-vite-$VERSION-linux-$ARCHITECTURE"
 
 (cd "$EXAMPLE_DIR" && bun run bundle:ui)
-STAGE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ziggy-test-app-package-XXXXXX")"
-(cd "$EXAMPLE_DIR" && zig build ziggy-test-app-linux -Doptimize=ReleaseSafe -Dstrip=true -p "$STAGE_DIR/prefix")
+STAGE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ziggy-example-vite-package-XXXXXX")"
+(cd "$EXAMPLE_DIR" && zig build ziggy-example-vite-linux -Doptimize=ReleaseSafe -Dstrip=true -p "$STAGE_DIR/prefix")
 mkdir -p "$OUTPUT_DIR"
 
 # The zip holds the executable, which has the UI embedded, in one folder.
-mkdir -p "$STAGE_DIR/zip/ziggy-test-app"
-cp "$STAGE_DIR/prefix/bin/ziggy-test-app" "$STAGE_DIR/zip/ziggy-test-app/"
+mkdir -p "$STAGE_DIR/zip/ziggy-example-vite"
+cp "$STAGE_DIR/prefix/bin/ziggy-example-vite" "$STAGE_DIR/zip/ziggy-example-vite/"
 rm -f "$OUTPUT_DIR/$BASE_NAME.zip"
-(cd "$STAGE_DIR/zip" && zip -q -r "$OUTPUT_DIR/$BASE_NAME.zip" ziggy-test-app)
+(cd "$STAGE_DIR/zip" && zip -q -r "$OUTPUT_DIR/$BASE_NAME.zip" ziggy-example-vite)
 
 # The deb installs under /opt, puts a link in /usr/bin and adds a menu entry so the app shows in the applications menu.
-mkdir -p "$STAGE_DIR/deb/DEBIAN" "$STAGE_DIR/deb/opt/ziggy-test-app" "$STAGE_DIR/deb/usr/bin" "$STAGE_DIR/deb/usr/share/applications"
-cp "$STAGE_DIR/prefix/bin/ziggy-test-app" "$STAGE_DIR/deb/opt/ziggy-test-app/"
-ln -s /opt/ziggy-test-app/ziggy-test-app "$STAGE_DIR/deb/usr/bin/ziggy-test-app"
-cat > "$STAGE_DIR/deb/usr/share/applications/dev.ziggy.testapp.desktop" <<DESKTOP
+mkdir -p "$STAGE_DIR/deb/DEBIAN" "$STAGE_DIR/deb/opt/ziggy-example-vite" "$STAGE_DIR/deb/usr/bin" "$STAGE_DIR/deb/usr/share/applications"
+cp "$STAGE_DIR/prefix/bin/ziggy-example-vite" "$STAGE_DIR/deb/opt/ziggy-example-vite/"
+ln -s /opt/ziggy-example-vite/ziggy-example-vite "$STAGE_DIR/deb/usr/bin/ziggy-example-vite"
+cat > "$STAGE_DIR/deb/usr/share/applications/dev.ziggy.examplevite.desktop" <<DESKTOP
 [Desktop Entry]
 Type=Application
-Name=Ziggy test app
+Name=Ziggy Vite example
 Comment=A small complete app built on Ziggy
-Exec=/usr/bin/ziggy-test-app
+Exec=/usr/bin/ziggy-example-vite
 Terminal=false
 Categories=Utility;
-StartupWMClass=dev.ziggy.testapp
+StartupWMClass=dev.ziggy.examplevite
 DESKTOP
 cat > "$STAGE_DIR/deb/DEBIAN/control" <<CONTROL
-Package: ziggy-test-app
+Package: ziggy-example-vite
 Version: $VERSION
 Architecture: $DEB_ARCHITECTURE
 Maintainer: Ziggy
 Depends: libgtk-3-0, libwebkit2gtk-4.1-0, gstreamer1.0-plugins-good, gstreamer1.0-libav
-Description: The Ziggy test app app
+Description: The Ziggy Vite example app
  A small complete app built on Ziggy.
 CONTROL
 rm -f "$OUTPUT_DIR/$BASE_NAME.deb"

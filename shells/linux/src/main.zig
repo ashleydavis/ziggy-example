@@ -1,5 +1,5 @@
 //
-// The Ziggy test app's Linux shell: what is the example's own (its name, its window and its UI) on top of Ziggy's shell.
+// The Ziggy Vite example's Linux shell: what is the example's own (its name, its window and its UI) on top of Ziggy's shell.
 // The UI is embedded in the executable by build.zig.
 //
 
@@ -10,8 +10,8 @@ pub fn main(init: std.process.Init) !u8 {
     const args = try init.minimal.args.toSlice(init.arena.allocator());
     return try shell.run(.{
         .host_request = null,
-        .app_id = "dev.ziggy.testapp",
-        .title = "Ziggy test app",
+        .app_id = "dev.ziggy.examplevite",
+        .title = "Ziggy Vite example",
         .default_width = 900,
         .default_height = 800,
         .icon_png = null,

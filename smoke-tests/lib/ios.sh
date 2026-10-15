@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# The iOS platform library of the Ziggy test app's smoke tests. See common.sh for what it implements.
+# The iOS platform library of the Ziggy Vite example's smoke tests. See common.sh for what it implements.
 #
 # When an iPhone or iPad is connected the scenarios run on it, as run-ios.sh runs the app there, and ios-device.sh, sourced
 # below, replaces everything here. Otherwise the app runs on an iOS simulator that already exists: ZIGGY_IOS_SIMULATOR names
@@ -18,7 +18,7 @@ if [ -n "$(apple_connected_device)" ]; then
 fi
 
 # The app's bundle identifier.
-IOS_BUNDLE_ID="dev.ziggy.testapp"
+IOS_BUNDLE_ID="dev.ziggy.examplevite"
 
 # The files the simulator's identifier and the app's process id are recorded in, per scenario.
 IOS_UDID_FILE_NAME="simulator.udid"
@@ -33,7 +33,7 @@ ziggy_platform_prepare() {
 ziggy_platform_start() {
     local test_dir="$1"
     local kind="$2"
-    local app="$ZIGGY_SMOKE_RUN_DIR/$kind-build/Build/Products/Release-iphonesimulator/ZiggyTestApp.app"
+    local app="$ZIGGY_SMOKE_RUN_DIR/$kind-build/Build/Products/Release-iphonesimulator/ZiggyExampleVite.app"
     local port_file="$test_dir/control-port.txt"
     rm -f "$port_file"
     local udid
@@ -108,10 +108,10 @@ ziggy_platform_is_running() {
     kill -0 "$(cat "$test_dir/$IOS_PID_FILE_NAME")" 2>/dev/null
 }
 
-# The Zig static library carries the core, so it is what scenario 8 searches.
+# The Zig static library carries the backend, so it is what scenario 8 searches.
 ziggy_platform_artifact_files() {
     local kind="$1"
-    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind-native/lib/libziggy_test_app.a"
+    printf '%s\n' "$ZIGGY_SMOKE_RUN_DIR/$kind-native/lib/libziggy_example_vite.a"
 }
 
 ziggy_platform_has_control_port() {
